@@ -56,7 +56,6 @@
             letter-spacing: 1px;
         }
 
-        /* 🕒 CONTAINER FLEX PARA O DISPLAY E BOTÕES DE AJUSTE */
         .timer-row {
             display: flex;
             align-items: center;
@@ -380,6 +379,10 @@
         .footer {
             text-align: center;
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
 
         .btn-clear {
@@ -389,6 +392,45 @@
             font-weight: bold;
             cursor: pointer;
             font-size: 0.9rem;
+        }
+
+        /* 💬 ESTILO DA CAIXINHA DE SUPORTE WHATSAPP */
+        .support-box {
+            background-color: #1a1f26;
+            border: 1px solid #2d3748;
+            border-radius: 16px;
+            padding: 14px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+
+        .support-text h5 {
+            font-size: 0.9rem;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .support-text p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .btn-whatsapp-support {
+            background-color: #25d366;
+            color: #0f1319;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-whatsapp-support:hover {
+            background-color: #20ba5a;
         }
 
         @media (max-width: 420px) {
@@ -590,6 +632,18 @@
 
         <footer class="footer">
             <button id="btn-clear-all" class="btn-clear">Limpar Todas as Matérias</button>
+            
+            <div class="support-box">
+                <div class="support-text">
+                    <h5>Dúvidas ou feedbacks?</h5>
+                    <p>Fale direto com o desenvolvedor</p>
+                </div>
+                <a href="https://wa.me/5548998556667?text=Olá%20William!%20Estou%20usando%20o%20seu%20aplicativo%20Meu%20Foco%20Diário%20e%20gostaria de%20tirar%20uma%20dúvida." 
+                   target="_blank" 
+                   class="btn-whatsapp-support">
+                   WhatsApp
+                </a>
+            </div>
         </footer>
     </div>
 
