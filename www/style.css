@@ -1,0 +1,33 @@
+/* 🎯 BARRA SUPERIOR DO USUÁRIO ADAPTADA */
+.user-bar {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between; /* Empurra o nome para a esquerda e o Sair para a direita */
+    align-items: center;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #1a1f26;
+    font-weight: 500;
+}
+
+#user-display-name {
+    color: #3b82f6;
+    font-weight: bold;
+}
+
+/* Link/Botão de Sair em formato de texto vermelho discreto */
+.btn-logout {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: opacity 0.2s;
+}
+
+.btn-logout:hover {
+    opacity: 0.7;
+}

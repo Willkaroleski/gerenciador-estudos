@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Foco Diário</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #0f1319;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 430px;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .timer-section {
+            background-color: #1a1f26;
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .focus-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 🕒 CONTAINER FLEX PARA O DISPLAY E BOTÕES DE AJUSTE */
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 14px 0;
+        }
+
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+        }
+
+        .btn-time-adjust {
+            background-color: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #2d3748;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-time-adjust:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn-time-adjust:not(:disabled):hover {
+            background-color: #2d3748;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1 1 calc(45% - 10px);
+            min-width: 90px;
+            color: white;
+        }
+
+        .btn:disabled {
+            background-color: #2d3748 !important;
+            color: #64748b !important;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-start { background-color: #4cd084 !important; color: #0f1319 !important; }
+        .btn-pause { background-color: #e15554 !important; }
+        .btn-reset { background-color: #1e293b !important; }
+        .btn-complete { background-color: #8b5cf6 !important; }
+
+        .todo-section {
+            background-color: #1a1f26;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .todo-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #94a3b8;
+        }
+
+        .todo-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .todo-input-group input {
+            flex: 1;
+            min-width: 0;
+            background-color: #0f1319;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .todo-input-group input:focus {
+            border-color: #4f46e5;
+        }
+
+        .btn-todo-add {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .todo-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .todo-empty {
+            color: #64748b;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 15px 0;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .todo-item {
+            background-color: #0f1319;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+
+        .todo-item:hover {
+            background-color: #1e2530;
+        }
+
+        .todo-text {
+            font-size: 0.9rem;
+            color: #ffffff;
+            word-break: break-all;
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .todo-item.done {
+            opacity: 0.5;
+            border-color: #10b981;
+        }
+
+        .todo-item.done .todo-text {
+            text-decoration: line-through;
+            color: #10b981;
+        }
+
+        .btn-todo-delete {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .btn-todo-delete:hover {
+            color: #ef4444;
+        }
+
+        .add-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 0;
+            background-color: #1a1f26;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            padding: 14px;
+            color: white;
+            outline: none;
+        }
+
+        .hours-select {
+            background-color: #1a1f26;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            padding: 0 10px;
+            color: white;
+            outline: none;
+            cursor: pointer;
+            min-width: 75px;
+        }
+
+        .btn-add {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            width: 48px;
+            height: 48px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 14px;
+        }
+
+        .btn-filter {
+            background-color: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #2d3748;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-filter.active {
+            background-color: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .subject-card {
+            background-color: #1a1f26;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .subject-card.selected {
+            border-color: #3b82f6;
+        }
+
+        .subject-card.completed {
+            border-color: #10b981;
+        }
+
+        .subject-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .subject-card p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .card-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 10px;
+            background-color: #2d3748;
+            color: #94a3b8;
+        }
+
+        .subject-card.completed .card-status {
+            background-color: #10b981;
+            color: #0f1319;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-clear {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 420px) {
+            .input-group {
+                flex-direction: row; 
+            }
+        }
+
+        .welcome-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0f1319;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        .welcome-box {
+            background-color: #1a1f26;
+            border-radius: 24px;
+            padding: 40px 24px;
+            width: 100%;
+            max-width: 390px;
+            text-align: center;
+            border: 1px solid #2d3748;
+        }
+
+        .welcome-box h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            color: white;
+        }
+
+        .welcome-box h1 span {
+            color: #4f46e5;
+        }
+
+        .welcome-box p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+
+        .welcome-input-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 8px;
+        }
+
+        .welcome-input-group label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .welcome-input-group input {
+            background-color: #0f1319;
+            border: 1px solid #2d3748;
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .welcome-input-group input:focus {
+            border-color: #4f46e5;
+        }
+
+        #btn-enter-app {
+            margin-top: 12px;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .user-bar {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #1a1f26;
+            font-weight: 500;
+        }
+
+        #user-display-name {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .btn-logout {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen" class="welcome-container">
+        <div class="welcome-box">
+            <h1>Bem-vindo ao<br><span>Meu Foco Diário</span></h1>
+            <p>Seu gerenciador pessoal de estudos</p>
+            
+            <div class="welcome-input-group">
+                <label for="username-input">Como deseja ser chamado?</label>
+                <input type="text" id="username-input" placeholder="Digite seu nome...">
+                <button id="btn-enter-app">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app-content" class="app-container">
+        
+        <div class="user-bar">
+            <span>Bons estudos, <span id="user-display-name">...</span>! 🎯</span>
+            <button id="btn-logout" class="btn-logout">Sair</button>
+        </div>
+
+        <header class="header">
+            <h1>Meu Foco Diário</h1>
+            <p>Selecione uma matéria e defina sua meta de estudo</p>
+        </header>
+
+        <main>
+            <section class="timer-section">
+                <div id="active-subject-title" class="focus-label">Nenhuma matéria selecionada</div>
+                
+                <div class="timer-row">
+                    <button id="btn-minus-5" class="btn-time-adjust" title="Remover 5 minutos" disabled>-5m</button>
+                    <div id="timer" class="timer-display">01:00:00</div>
+                    <button id="btn-plus-5" class="btn-time-adjust" title="Adicionar 5 minutos" disabled>+5m</button>
+                </div>
+                
+                <div class="buttons-grid">
+                    <button id="btn-start" class="btn btn-start" disabled>Iniciar</button>
+                    <button id="btn-pause" class="btn btn-pause" disabled>Pausar</button>
+                    <button id="btn-reset" class="btn btn-reset" disabled>Reiniciar</button>
+                    <button id="btn-complete" class="btn btn-complete" disabled>Concluir</button>
+                </div>
+            </section>
+
+            <section class="add-section">
+                <h2>Minhas Matérias de Hoje</h2>
+                <div class="input-group">
+                    <input type="text" id="new-subject-input" placeholder="Digite o nome da matéria... (ex: Flexbox)">
+                    
+                    <select id="subject-hours-select" class="hours-select">
+                        <option value="60">1h</option>
+                        <option value="90">1h 30m</option>
+                        <option value="120">2h</option>
+                        <option value="150">2h 30m</option>
+                        <option value="180">3h</option>
+                        <option value="210">3h 30m</option>
+                        <option value="240">4h</option>
+                    </select>
+                    
+                    <button id="btn-add-subject" class="btn-add" title="Adicionar">+</button>
+                </div>
+
+                <div class="filter-container">
+                    <button id="btn-toggle-filter" class="btn-filter">Esconder Concluídas</button>
+                </div>
+            </section>
+
+            <div id="subjects-container" class="cards-grid">
+                </div>
+
+            <section class="todo-section">
+                <h2>O que vou focar neste bloco?</h2>
+                <div class="todo-input-group">
+                    <input type="text" id="new-task-input" placeholder="Ex: Estudar a sintaxe do for loop...">
+                    <button id="btn-add-task" class="btn-todo-add" title="Adicionar Tarefa">+</button>
+                </div>
+                <ul id="todo-list" class="todo-list">
+                    </ul>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <button id="btn-clear-all" class="btn-clear">Limpar Todas as Matérias</button>
+        </footer>
+    </div>
+
+    <audio id="end-sound" src="notification.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
